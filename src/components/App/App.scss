@@ -1,0 +1,143 @@
+@font-face {
+    font-family: "Inter-Regular";
+    src: url("../../font/Inter-Regular.woff") format("woff"),
+        url("../../font/Inter-Regular.woff2") format("woff2");
+    font-style: normal;
+    font-weight: normal;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #E5E5E5;
+	 font-family: "Inter-Regular", "Arial", "sans-serif";
+}
+
+
+
+
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+li,
+a {
+	margin: 0;
+	position: 0;
+}
+
+ul {
+	list-style: none
+}
+
+.spinner {
+	margin-left: 50%;
+	margin-top: 50px;
+}
+
+.head {
+	box-sizing: content-box;
+	background-color: #FFFFFF;
+	width: 1050px;
+	margin: 0 auto;
+	padding-top: 50px;
+	padding-bottom: 15px;
+}
+
+.center {
+	margin-top: 20px;
+  text-align: center;
+}
+
+.pagination {
+	text-align: center;
+
+}
+
+.ant-pagination-item {
+	min-width: 22px;
+	height: 22px;
+	border: none;
+	font-family: "Inter-Regular";
+	font-style: normal;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: 22px;
+	color: rgba(0, 0, 0, 0.65);
+	margin: 10px;
+
+}
+
+.ant-pagination-item-active {
+	background: #1890FF;
+	border-radius: 4px;
+
+	a {
+		color: #FFFFFF;
+
+	}
+}
+
+.ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination-next .ant-pagination-item-link {
+	border: none;
+
+}
+
+.ant-pagination-item-active:focus-visible a,
+.ant-pagination-item-active:hover a {
+	color: #FFFFFF;
+	padding: 0;
+}
+
+
+.ant-tabs-nav {
+  align-self: center;
+	
+}
+
+.searchNone{
+display: none
+}
+
+
+.ant-tabs{
+	font-family: "Inter-Regular";
+}
+
+
+.ant-alert{
+	
+	width: 938px;
+	margin: 0 auto;
+	margin-top: 20px;
+}
+.ant-alert-message{
+	
+	font-family: "Inter-Regular";
+	font-weight: 600;
+}
+
+@media (max-width: 420px) { 
+
+.head {
+
+	width: 420px;
+}
+	.ant-alert{
+	width: 388px;
+		margin: 0 auto;
+		margin-top: 20px;
+}
+
+}
+
+
+
+

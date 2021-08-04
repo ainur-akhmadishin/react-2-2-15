@@ -1,0 +1,32 @@
+.search {
+	display: block;
+	text-align: center;
+	font-family: "Inter-Regular";
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	line-height: 22px;
+	
+	
+
+
+}
+
+.input {
+	width: 938px;
+	height: 40px;
+	border-radius: 4px;
+	border: 1px solid #D9D9D9;
+	padding-left: 12px;
+
+}
+
+@media (max-width: 420px) { 
+
+.input {
+	width: 388px;
+
+}
+	
+
+}
