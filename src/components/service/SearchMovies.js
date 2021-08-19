@@ -1,51 +1,57 @@
 export default class SearchMovies {
-  apiBase = 'https://api.themoviedb.org/3/search/movie?api_key=5ef48972310b83a9569c2449ed33b900';
+  APIKEY = '5ef48972310b83a9569c2449ed33b900';
 
-  async SearchMovies(url) {
-    const res = await fetch(`${this.apiBase}${url}`);
-    if (res.ok) return res.json();
-    throw new Error('Ошибка запроса');
-  }
+  BASEURL = 'https://api.themoviedb.org/3/';
 
-  async getSearch(request, page) {
-    const res = await this.SearchMovies(`&query=${request}&page=${page}`);
+  finalUrl = (endUrl, param = '') => `${this.BASEURL}${endUrl}?api_key=${this.APIKEY}${param}`;
+
+  async request(url, method = 'get', value = null) {
+    const data = {};
+    if (method === 'post') {
+      data.method = 'POST';
+      data.headers = { 'Content-Type': 'application/json;charset=utf-8' };
+      data.body = JSON.stringify(value);
+    }
+    const res = await fetch(url, data);
     return res;
   }
 
-  async createSession() {
-    const res =
-     await fetch(`https://api.themoviedb.org/3/authentication/guest_session/new?api_key=5ef48972310b83a9569c2449ed33b900
-`);
-      if (res.ok) return res;
-    throw new Error('Ошибка запроса');
+  async getNewSession() {
+    const url = this.finalUrl(`authentication/guest_session/new`);
+
+    const res = await this.request(url);
+
+    return res;
   }
 
-  async rateMovies(idMovie, idSession, valueRate) {
-    const rate = {
-      value: valueRate,
-    };
+  async getSearch(request, page) {
+    const url = this.finalUrl('search/movie', `&query=${request}&page=${page}`);
 
-    const res = await fetch(
-      `https://api.themoviedb.org/3/movie/${idMovie}/rating?api_key=5ef48972310b83a9569c2449ed33b900&guest_session_id=${idSession}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8',
-        },
-        body: JSON.stringify(rate),
-      }
-    );
-	  
-	    if (res.ok) return res;
-    throw new Error('Ошибка запроса');
+    const res = await this.request(url);
 
+    return res;
   }
 
-  async dataRate(idSession) {
-    const res =await fetch(
-      `https://api.themoviedb.org/3/guest_session/${idSession}/rated/movies?api_key=5ef48972310b83a9569c2449ed33b900`
-    );
-      if (res.ok) return res;
-    throw new Error('Ошибка запроса');
+  async postRateMovie(idMovie, idSession, valueRate) {
+    const url = this.finalUrl(`movie/${idMovie}/rating`, `&guest_session_id=${idSession}`);
+
+    const res = await this.request(url, 'post', { value: valueRate });
+    return res;
+  }
+
+  async getRatedMovies(idSession) {
+    const url = this.finalUrl(`guest_session/${idSession}/rated/movies`);
+
+    const res = await this.request(url);
+
+    return res;
+  }
+
+  async getListGenres() {
+    const url = this.finalUrl(`genre/movie/list`);
+
+    const res = await this.request(url);
+
+    return res;
   }
 }

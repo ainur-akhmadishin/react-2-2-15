@@ -16,8 +16,8 @@ export default class Card extends Component {
     const Genres = (arr, obj) =>
       arr.map((el) => {
         const move = obj.find((elem) => elem.id === el);
-		 const key = `k${el}`
-	    return <li key ={key}> {move.name}</li>;
+        const key = `k${el}`;
+        return <li key={key}> {move.name}</li>;
       });
 
     const rateMovie = (idMovie, value) => {
@@ -44,9 +44,9 @@ export default class Card extends Component {
     const colorClass = `popularity ${borderColor()}`;
 
     const shortOverview = (str) => {
-      if (str.length < 240) return `${str}...`;
+      if (str.length < 210) return `${str}...`;
 
-      const shortText = str.slice(0, 240);
+      const shortText = str.slice(0, 210);
       const lastSpace = shortText.lastIndexOf(' ');
       return `${shortText.slice(0, lastSpace)}...`;
     };

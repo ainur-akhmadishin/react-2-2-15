@@ -9,7 +9,7 @@ const SearchPanel = ({ onSearch }) => {
       return;
     }
     onSearch(event.target.value);
-  }, 1000);
+  }, 1500);
 
   return (
     <form className="search">
