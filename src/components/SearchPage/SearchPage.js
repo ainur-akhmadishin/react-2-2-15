@@ -7,7 +7,7 @@ import CardList from '../CardList';
 
 export default class SearchPage extends Component {
   state = {
-    dataBase: [],
+    movies: [],
     loading: true,
     error: false,
     request: 'return',
@@ -39,16 +39,16 @@ export default class SearchPage extends Component {
     });
   };
 
-  onLoaded = (dataBase) => {
-    this.setState({ dataBase: dataBase.results, total: dataBase.total_results, loading: false });
+  setMoviesState = (movies) => {
+    this.setState({ movies: movies.results, total: movies.total_results, loading: false });
   };
 
   findMovies = () => {
     const { request, page } = this.state;
     this.api
       .getSearch(request, page)
-      .then((dataBase) => dataBase.json())
-      .then(this.onLoaded)
+      .then((res) => res)
+      .then(this.setMoviesState)
       .catch(this.onError);
   };
 
@@ -57,21 +57,21 @@ export default class SearchPage extends Component {
   };
 
   onRate = (id, value) => {
-    this.setState(({ dataBase }) => {
-      const idx = dataBase.findIndex((el) => el.id === id);
-      const oldItem = dataBase[idx];
+    this.setState(({ movies }) => {
+      const idx = movies.findIndex((el) => el.id === id);
+      const oldItem = movies[idx];
       const newItem = {
         ...oldItem,
         rating: value,
       };
-      const newData = [...dataBase.slice(0, idx), newItem, ...dataBase.slice(idx + 1)];
+      const newData = [...movies.slice(0, idx), newItem, ...movies.slice(idx + 1)];
 
       return {
-        dataBase: newData,
+        movies: newData,
       };
     });
 
-    this.databaseRate(id, value);
+    this.movieRate(id, value);
   };
 
   handlePage = (page) => {
@@ -79,26 +79,20 @@ export default class SearchPage extends Component {
   };
 
   onSearch = (request) => {
-    this.setState({ request, loading: true });
+    this.setState({ request, loading: true, total: 1 });
   };
 
-  async databaseRate(id, value) {
-    const { idSession, onDatabaseRate } = this.props;
+  async movieRate(id, value) {
+    const { idSession } = this.props;
 
     const res = await this.api.postRateMovie(id, idSession, value);
     if (!res.ok) {
       this.setState({ error: true });
     }
-
-    const result = await this.api.getRatedMovies(idSession);
-
-    const data = await result.json();
-
-    onDatabaseRate(data.results);
   }
 
   render() {
-    const { dataBase, loading, error, total, page } = this.state;
+    const { movies, loading, error, total, page } = this.state;
 
     const { idSession } = this.props;
 
@@ -113,7 +107,7 @@ export default class SearchPage extends Component {
       />
     ) : null;
 
-    const hasDate = !(loading || error);
+    const hasData = !(loading || error);
     const notPage = !total ? <Alert message="Ни чего не найдено" type="error" /> : null;
     const errorMessage = error ? <Alert message="Ошибка запроса!" type="error" /> : null;
     const load = loading ? (
@@ -121,7 +115,7 @@ export default class SearchPage extends Component {
         <Spin size="large" tip="Loading..." />
       </div>
     ) : null;
-    const content = hasDate ? <CardList data={dataBase} idSession={idSession} onRate={this.onRate} /> : null;
+    const content = hasData ? <CardList data={movies} idSession={idSession} onRate={this.onRate} /> : null;
 
     return (
       <div>
@@ -138,10 +132,8 @@ export default class SearchPage extends Component {
 
 SearchPage.defaultProps = {
   idSession: '',
-  onDatabaseRate: () => {},
 };
 
 SearchPage.propTypes = {
   idSession: PropTypes.string,
-  onDatabaseRate: PropTypes.func,
 };

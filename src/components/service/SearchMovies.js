@@ -5,37 +5,45 @@ export default class SearchMovies {
 
   finalUrl = (endUrl, param = '') => `${this.BASEURL}${endUrl}?api_key=${this.APIKEY}${param}`;
 
-  async request(url, method = 'get', value = null) {
-    const data = {};
-    if (method === 'post') {
-      data.method = 'POST';
-      data.headers = { 'Content-Type': 'application/json;charset=utf-8' };
-      data.body = JSON.stringify(value);
-    }
-    const res = await fetch(url, data);
+  async request(url, method = 'GET', value = null) {
+    const res = await fetch(url, this.getOptions(method, value));
     return res;
   }
+
+  getOptions = (method, value) => {
+    if (method === 'POST') {
+      return {
+        method,
+        headers: { 'Content-Type': 'application/json;charset=utf-8' },
+        body: JSON.stringify({ value }),
+      };
+    }
+
+    return {
+      method,
+    };
+  };
 
   async getNewSession() {
     const url = this.finalUrl(`authentication/guest_session/new`);
 
     const res = await this.request(url);
-
-    return res;
+    const json = await res.json();
+    return json;
   }
 
   async getSearch(request, page) {
     const url = this.finalUrl('search/movie', `&query=${request}&page=${page}`);
 
     const res = await this.request(url);
-
-    return res;
+    const json = await res.json();
+    return json;
   }
 
   async postRateMovie(idMovie, idSession, valueRate) {
     const url = this.finalUrl(`movie/${idMovie}/rating`, `&guest_session_id=${idSession}`);
 
-    const res = await this.request(url, 'post', { value: valueRate });
+    const res = await this.request(url, 'POST', valueRate);
     return res;
   }
 
@@ -43,15 +51,14 @@ export default class SearchMovies {
     const url = this.finalUrl(`guest_session/${idSession}/rated/movies`);
 
     const res = await this.request(url);
-
-    return res;
+    const json = await res.json();
+    return json;
   }
 
   async getListGenres() {
     const url = this.finalUrl(`genre/movie/list`);
-
     const res = await this.request(url);
-
-    return res;
+    const json = await res.json();
+    return json;
   }
 }

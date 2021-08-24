@@ -13,14 +13,12 @@ import SearchMovies from '../service/SearchMovies';
 import { Provider } from '../service/Context';
 
 export default class App extends Component {
-  data = [];
-
   state = {
-    rateData: [],
     loading: true,
     error: false,
     idSession: '',
     genres: [],
+    activeTabs: 'SearchPage',
   };
 
   api = new SearchMovies();
@@ -30,21 +28,17 @@ export default class App extends Component {
   }
 
   async handleGenre() {
-    const result = await this.api
-      .getListGenres()
-      .then((res) => res.json())
-      .then((res) => res.genres);
+    const result = await this.api.getListGenres().then((res) => res.genres);
     return result;
   }
 
-  onDatabaseRate = (value) => {
-    this.data = value;
-    this.setState({ rateData: this.data });
+  onActiveTab = (key) => {
+    this.setState({ activeTabs: key });
   };
 
   async newSession() {
-    const res = await this.api.getNewSession().then((resp) => resp.json());
-    return res.guest_session_id;
+    const result = await this.api.getNewSession().then((res) => res.guest_session_id);
+    return result;
   }
 
   async initState() {
@@ -65,7 +59,7 @@ export default class App extends Component {
   }
 
   render() {
-    const { rateData, loading, idSession, genres, error } = this.state;
+    const { loading, idSession, genres, error, activeTabs } = this.state;
     const { TabPane } = Tabs;
     const errMessage = error ? <Alert message="Ошибка загрузки" type="error" /> : null;
 
@@ -77,12 +71,12 @@ export default class App extends Component {
     ) : null;
 
     const content = !(loading || error) ? (
-      <Tabs defaultActiveKey="SearchPage">
+      <Tabs activeKey={activeTabs} onChange={this.onActiveTab}>
         <TabPane tab="Search" key="SearchPage">
-          <SearchPage idSession={idSession} onRate={this.onRate} onDatabaseRate={this.onDatabaseRate} />
+          <SearchPage idSession={idSession} onRate={this.onRate} />
         </TabPane>
-        <TabPane tab="Rate" key="ratePage" forceRender>
-          <RatePage rateDate={rateData} idSession={idSession} />
+        <TabPane tab="Rate" key="ratePage">
+          <RatePage idSession={idSession} isOpen={activeTabs} />
         </TabPane>
       </Tabs>
     ) : null;
